@@ -154,7 +154,7 @@ func (p *X5C) authorizeToken(token string, audiences []string) (*x5cPayload, err
 		return nil, errs.Unauthorized("x5c.authorizeToken; certificate used to sign x5c token cannot be used for digital signature")
 	}
 
-	// Using the leaf certificates key to validate the claims accomplishes two
+	// Using the leaf certificate's key to validate the claims accomplishes two
 	// things:
 	//   1. Asserts that the private key used to sign the token corresponds
 	//      to the public certificate in the `x5c` header of the token.
@@ -302,7 +302,7 @@ func (p *X5C) AuthorizeSSHSign(_ context.Context, token string) ([]SignOption, e
 	// Use options in the token.
 	if opts.CertType != "" {
 		if certType, err = sshutil.CertTypeFromString(opts.CertType); err != nil {
-			return nil, errs.BadRequestErr(err, err.Error())
+			return nil, errs.BadRequestErr(err, "%s", err.Error())
 		}
 	}
 	if opts.KeyID != "" {

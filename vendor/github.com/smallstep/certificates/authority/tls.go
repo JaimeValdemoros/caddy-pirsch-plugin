@@ -197,7 +197,7 @@ func (a *Authority) signX509(ctx context.Context, csr *x509.CertificateRequest, 
 
 	if err := a.callEnrichingWebhooksX509(ctx, prov, webhookCtl, attData, csr); err != nil {
 		return nil, prov, errs.ApplyOptions(
-			errs.ForbiddenErr(err, err.Error()),
+			errs.ForbiddenErr(err, "%s", err.Error()),
 			errs.WithKeyVal("csr", csr),
 			errs.WithKeyVal("signOptions", signOpts),
 		)
@@ -209,7 +209,7 @@ func (a *Authority) signX509(ctx context.Context, csr *x509.CertificateRequest, 
 		switch {
 		case errors.As(err, &te):
 			return nil, prov, errs.ApplyOptions(
-				errs.BadRequestErr(err, err.Error()),
+				errs.BadRequestErr(err, "%s", err.Error()),
 				errs.WithKeyVal("csr", csr),
 				errs.WithKeyVal("signOptions", signOpts),
 			)
@@ -620,6 +620,16 @@ func (a *Authority) Revoke(ctx context.Context, revokeOpts *RevokeOptions) error
 		var claims Claims
 		if err = token.UnsafeClaimsWithoutVerification(&claims); err != nil {
 			return errs.Wrap(http.StatusUnauthorized, err, "authority.Revoke", opts...)
+		}
+
+		// Verify that the serial in the token matches the serial from the request.
+		if revokeOpts.Serial != claims.Subject {
+			return errs.ApplyOptions(
+				errs.Forbidden(
+					"request serial number %q and token subject %q do not match",
+					revokeOpts.Serial, claims.Subject,
+				), opts...,
+			)
 		}
 
 		// This method will also validate the audiences for JWK provisioners.
