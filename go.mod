@@ -1,4 +1,4 @@
-module github.com/pirsch-analytics/caddy-pirsch-plugin
+module github.com/JaimeValdemoros/caddy-pirsch-plugin
 
 go 1.25
 
