@@ -42,7 +42,9 @@ func (m *PirschPlugin) Provision(ctx caddy.Context) (err error) {
 func (m *PirschPlugin) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	r2 := r.Clone(context.TODO())
 	go func(r *http.Request) {
-		if err := m.client.PageView(r, nil); err != nil {
+		options := new(pirsch.PageViewOptions)
+		options.IP = r.Header.Get("X-Forwarded-For")
+		if err := m.client.PageView(r, options); err != nil {
 			m.logger.Error("failed sending page view to pirsch: %v", zap.Error(err))
 		}
 	}(r2)
