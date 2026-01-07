@@ -55,8 +55,8 @@ func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error)
 		}
 	}
 
-	if p.ClientId == "" || p.ClientSecret == "" {
-		return nil, fmt.Errorf("missing configuration option (one of 'client_id', 'client_secret')")
+	if p.ClientSecret == "" {
+		return nil, fmt.Errorf("missing configuration option ('client_secret')")
 	}
 
 	return p, nil
