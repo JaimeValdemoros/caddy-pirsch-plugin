@@ -56,6 +56,16 @@ http://localhost:8080 {
 }
 ```
 
+## Building Caddy
+
+To compile Caddy with the Pirsch plugin, install and use [xcaddy](https://github.com/caddyserver/xcaddy):
+
+```
+xcaddy build --with github.com/pirsch-analytics/caddy-pirsch-plugin@plugin-tag
+```
+
+Replace `plugin-tag` with the plugin version, e.g. `v1.0.2`.
+
 ## License
 
 Apache 2.0

@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.0.2
+
+* fixed dependencies
+
 # 1.0.1
 
 * fixed go.mod
